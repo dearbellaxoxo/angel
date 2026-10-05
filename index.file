@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bella rose ˖ ݁ 𝜗𝜚˚⋆</title>
+  
+  <!-- Fonts: Quicksand, Fredoka, Sacramento, Montez, Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Montez&family=Outfit:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js & Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-cream: #faf7f8;
+      --card-white: #ffffff;
+      --petal-pink: #ffb7c5;
+      --soft-pink: #ffdce5;
+      --accent-pink: #f472b6;
+      --deep-pink: #e25885;
+      --pastel-blue: #cbe6ff;
+      --soft-blue: #e8f3ff;
+      --pastel-yellow: #fff3c4;
+      --pastel-green: #d1f4e0;
+      --text-main: #6c5a65;
+      --text-muted: #a3929d;
+      --shadow-soft: 0 10px 25px -5px rgba(244, 114, 182, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+      --border-pink: #fbcfe8;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Quicksand', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0;
+      background-image: 
+        radial-gradient(var(--border-pink) 0.75px, transparent 0.75px),
+        radial-gradient(var(--border-pink) 0.75px, #faf7f8 0.75px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+
+    /* Outer Wrapper / Frame */
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: var(--bg-cream);
+      position: relative;
+      padding-bottom: 90px;
+      box-shadow: 0 0 40px rgba(244, 114, 182, 0.15);
+      overflow-x: hidden;
+    }
+
+    /* Custom Header Bar */
+    .top-bar {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed var(--border-pink);
+    }
+
+    .top-bar .logo {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.4rem;
+      color: var(--accent-pink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    .top-bar .logo span {
+      font-family: 'Montez', cursive;
+      font-size: 1.8rem;
+      color: var(--deep-pink);
+    }
+
+    .streak-badge {
+      background: linear-gradient(135deg, var(--soft-pink), #fff);
+      border: 1.5px solid var(--border-pink);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-pink);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(244, 114, 182, 0.15);
+    }
+
+    /* Dynamic Page Container */
+    .page {
+      display: none;
+      padding: 20px;
+      animation: fadeIn 0.35s ease-in-out;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Common Card Styling */
+    .cute-card {
+      background: var(--card-white);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 18px;
+      border: 2px solid #ffffff;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+
+    .cute-card.pink-tint {
+      background: linear-gradient(180deg, #ffffff 0%, var(--soft-pink) 250%);
+    }
+
+    .cute-card.blue-tint {
+      background: linear-gradient(180deg, #ffffff 0%, var(--soft-blue) 250%);
+    }
+
+    .section-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.15rem;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span.sparkle {
+      color: var(--accent-pink);
+    }
+
+    /* Profile Header Section (Hyperfem anime aesthetic) */
+    .profile-hero {
+      background: linear-gradient(135deg, #ffeef3, #e8f3ff);
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      position: relative;
+      border: 2px solid #fff;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 20px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .profile-banner {
+      height: 70px;
+      background: linear-gradient(90deg, #ffc0cb, #cbe6ff, #fff3c4);
+      border-radius: 16px;
+      margin: -20px -20px 15px -20px;
+      position: relative;
+      opacity: 0.8;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin: -50px auto 10px;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.25);
+      background: #fff;
+    }
+
+    .avatar-upload-btn {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background: var(--accent-pink);
+      color: white;
+      border: 2px solid white;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .profile-name {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.4rem;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .profile-tag {
+      font-size: 0.8rem;
+      color: var(--accent-pink);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .profile-bio {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 8px 14px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    /* About me tags grid */
+    .info-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .pill {
+      background: #fff;
+      border: 1px solid var(--border-pink);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    /* Calorie Tracker Visuals */
+    .calorie-dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .calorie-stat-box {
+      background: var(--soft-pink);
+      padding: 14px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      border: 1px solid #fff;
+    }
+
+    .calorie-stat-box.blue {
+      background: var(--soft-blue);
+    }
+
+    .calorie-stat-box .num {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.4rem;
+      color: var(--deep-pink);
+      font-weight: 700;
+    }
+
+    .calorie-stat-box.blue .num {
+      color: #3b82f6;
+    }
+
+    .calorie-stat-box .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .food-log-list {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .food-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border-pink);
+      font-size: 0.85rem;
+    }
+
+    .food-item .cals {
+      font-weight: 700;
+      color: var(--accent-pink);
+    }
+
+    /* Inputs & Buttons Styling */
+    .cute-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      border: 1.5px solid var(--border-pink);
+      background: #fff;
+      outline: none;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      transition: border 0.2s;
+    }
+
+    .cute-input:focus {
+      border-color: var(--accent-pink);
+    }
+
+    .cute-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--deep-pink));
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .cute-btn:active {
+      transform: scale(0.98);
+    }
+
+    .cute-btn.secondary {
+      background: #fff;
+      color: var(--accent-pink);
+      border: 1.5px solid var(--border-pink);
+      box-shadow: none;
+    }
+
+    /* Habit Checklist */
+    .habit-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      padding: 12px 16px;
+      border-radius: 16px;
+      border: 1.5px solid #f3e8ff;
+      margin-bottom: 8px;
+      transition: all 0.2s;
+    }
+
+    .habit-item.completed {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      opacity: 0.85;
+    }
+
+    .habit-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .habit-checkbox {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--border-pink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: white;
+      transition: all 0.2s;
+    }
+
+    .habit-item.completed .habit-checkbox {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      color: white;
+    }
+
+    .habit-text {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .habit-item.completed .habit-text {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    /* Polaroids Progress Photos Grid */
+    .polaroid-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .polaroid-card {
+      background: #fff;
+      padding: 10px 10px 16px 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      border: 1px solid #f1f1f1;
+      text-align: center;
+      transform: rotate(-1deg);
+      transition: transform 0.2s;
+    }
+
+    .polaroid-card:nth-child(even) {
+      transform: rotate(1deg);
+    }
+
+    .polaroid-card:hover {
+      transform: rotate(0deg) scale(1.02);
+    }
+
+    .polaroid-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: #faf7f8;
+      margin-bottom: 8px;
+    }
+
+    .polaroid-caption {
+      font-family: 'Sacramento', cursive;
+      font-size: 1.1rem;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* Video Vault Youtube Cards */
+    .video-card {
+      background: #fff;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1.5px solid var(--border-pink);
+      margin-bottom: 12px;
+    }
+
+    .video-iframe-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .video-iframe-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-info {
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Aesthetic Notepad */
+    .notepad-textarea {
+      width: 100%;
+      height: 220px;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1.5px solid var(--border-pink);
+      background: #fffefb;
+      background-image: linear-gradient(#f1e5e9 1px, transparent 1px);
+      background-size: 100% 24px;
+      line-height: 24px;
+      font-size: 0.9rem;
+      color: #4a3e47;
+      outline: none;
+      resize: none;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      border-top: 1.5px solid var(--border-pink);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 12px 0;
+      z-index: 1000;
+      box-shadow: 0 -4px 20px rgba(244, 114, 182, 0.1);
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 16%;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .nav-btn .icon {
+      font-size: 1.25rem;
+    }
+
+    .nav-btn.active {
+      color: var(--deep-pink);
+      transform: translateY(-2px);
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #fff;
+      width: 100%;
+      max-width: 400px;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 2px solid var(--border-pink);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    /* Onboarding Overlay Screen */
+    #onboarding-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-cream);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+      background-image: 
+        radial-gradient(var(--border-pink) 0.75px, transparent 0.75px),
+        radial-gradient(var(--border-pink) 0.75px, #faf7f8 0.75px);
+      background-size: 24px 24px;
+    }
+
+    .onboarding-title {
+      font-family: 'Montez', cursive;
+      font-size: 3.2rem;
+      color: var(--deep-pink);
+      margin-bottom: 6px;
+    }
+
+    .onboarding-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* Helper styles */
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ONBOARDING MODAL (First time setup) -->
+  <div id="onboarding-screen" style="display: none;">
+    <div class="onboarding-title">bella rose 𝜗𝜚</div>
+    <div class="onboarding-sub">welcome to your dreamy fitness & self-care diary ˖ ݁  ˚⋆</div>
+    
+    <div class="cute-card" style="width: 100%;">
+      <input type="text" id="setup-name" class="cute-input" placeholder="your sweet name..." />
+      <input type="text" id="setup-bio" class="cute-input" placeholder="your aesthetic bio / quote..." />
+      <input type="number" id="setup-calories" class="cute-input" placeholder="daily calorie goal (e.g. 1800)" />
+      <button class="cute-btn" onclick="completeSetup()">enter your world ✧˚</button>
+    </div>
+  </div>
+
+  <!-- MAIN APP WRAPPER -->
+  <div class="app-container">
+
+    <!-- Top Sticky Header -->
+    <div class="top-bar">
+      <div class="logo">
+        <span>bella</span> rose 𝜗𝜚
+      </div>
+      <div class="streak-badge">
+        <span>🔥</span> <span id="streak-count">0</span> day streak
+      </div>
+    </div>
+
+    <!-- 1. HOME / PROFILE PAGE -->
+    <div id="page-profile" class="page active">
+      <div class="profile-hero">
+        <div class="profile-banner"></div>
+        <div class="avatar-wrapper">
+          <img id="profile-img" class="avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Avatar">
+          <label class="avatar-upload-btn" for="avatar-input">📷</label>
+          <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+        </div>
+        <div class="profile-name" id="display-name">Angel 𝜗𝜚</div>
+        <div class="profile-tag">@dreamy_girl ˖ ݁.</div>
+        <div class="profile-bio" id="display-bio">“blooming into my best self every single day 🌸”</div>
+        
+        <div class="info-pills">
+          <div class="pill">🎀 soft girl</div>
+          <div class="pill">✨ 100% aesthetic</div>
+          <div class="pill">🩰 fitness era</div>
+        </div>
+      </div>
+
+      <!-- Quick Summary Cards -->
+      <div class="cute-card pink-tint">
+        <div class="section-title"><span class="sparkle">✦</span> Daily Intention</div>
+        <div id="daily-quote" style="font-style: italic; font-size: 0.9rem; color: #785a6a;">
+          "Hydrate, stay gentle with yourself, and move with grace today."
+        </div>
+      </div>
+
+      <div class="cute-card">
+        <div class="section-title"><span class="sparkle">📊</span> Quick Stats</div>
+        <div class="calorie-dashboard">
+          <div class="calorie-stat-box">
+            <div class="num" id="quick-cals">0</div>
+            <div class="label">Cals Eaten</div>
+          </div>
+          <div class="calorie-stat-box blue">
+            <div class="num" id="quick-habits">0/0</div>
+            <div class="label">Habits Done</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. CALORIE TRACKER PAGE -->
+    <div id="page-calories" class="page">
+      <div class="cute-card pink-tint">
+        <div class="section-title"><span class="sparkle">🌸</span> Calorie Overview</div>
+        
+        <div class="calorie-dashboard">
+          <div class="calorie-stat-box">
+            <div class="num" id="cal-eaten">0</div>
+            <div class="label">Eaten Today</div>
+          </div>
+          <div class="calorie-stat-box blue">
+            <div class="num" id="cal-remaining">1800</div>
+            <div class="label">Remaining</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 15px; background: #fff; border-radius: 12px; height: 12px; overflow: hidden; border: 1px solid var(--border-pink);">
+          <div id="cal-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--soft-pink), var(--accent-pink)); transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <!-- Add Food Form -->
+      <div class="cute-card">
+        <div class="section-title"><span class="sparkle">🍓</span> Log Food & Meals</div>
+        <input type="text" id="food-name" class="cute-input" placeholder="Meal name (e.g. Matcha Latte & Toast)" />
+        <input type="number" id="food-cals" class="cute-input" placeholder="Calories (e.g. 350)" />
+        <button class="cute-btn" onclick="addFoodItem()">+ Add to Journal</button>
+      </div>
+
+      <!-- Food Logs List -->
+      <div class="cute-card">
+        <div class="section-title"><span class="sparkle">📜</span> Today's Meals</div>
+        <div class="food-log-list" id="food-list">
+          <!-- Dynamic Items -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. HABIT TRACKER PAGE -->
+    <div id="page-habits" class="page">
+      <div class="cute-card pink-tint">
+        <div class="flex-between" style="margin-bottom: 10px;">
+          <div class="section-title" style="margin: 0;"><span class="sparkle">✦</span> Daily Habits</div>
+          <button class="cute-btn secondary" style="width: auto; padding: 6px 12px; font-size: 0.8rem;" onclick="openModal('habit-modal')">+ New Habit</button>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Complete all daily habits to build your continuous streak! 🔥</p>
+        
+        <div id="habits-container">
+          <!-- Dynamic Habits -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. GRAPHS & MEASUREMENTS PAGE -->
+    <div id="page-graphs" class="page">
+      <div class="cute-card">
+        <div class="flex-between" style="margin-bottom: 12px;">
+          <div class="section-title" style="margin:0;"><span class="sparkle">🩰</span> Body & Progress Graphs</div>
+          <button class="cute-btn secondary" style="width: auto; padding: 6px 12px; font-size: 0.8rem;" onclick="openModal('graph-modal')">+ Add Graph</button>
+        </div>
+        
+        <!-- Select Chart Category -->
+        <select id="chart-selector" class="cute-input" onchange="renderActiveChart()">
+          <option value="weight">Weight Loss (kg/lbs)</option>
+          <option value="bmi">BMI Tracker</option>
+          <option value="waist">Waist (inches/cm)</option>
+          <option value="glutes">Glutes (inches/cm)</option>
+          <option value="chest">Chest (inches/cm)</option>
+          <option value="arm">Upper Arm (inches/cm)</option>
+          <option value="thigh">Upper Thigh (inches/cm)</option>
+          <option value="calf">Calf (inches/cm)</option>
+        </select>
+
+        <div style="position: relative; height: 220px; width: 100%; margin-top: 10px;">
+          <canvas id="bodyChart"></canvas>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
+          <input type="number" id="graph-value-input" class="cute-input" placeholder="New value..." style="margin:0;" />
+          <button class="cute-btn" style="width: 120px;" onclick="addGraphDataPoint()">Log Value</button>
+        </div>
+      </div>
+
+      <!-- Progress Photos Section -->
+      <div class="cute-card">
+        <div class="flex-between" style="margin-bottom: 10px;">
+          <div class="section-title" style="margin: 0;"><span class="sparkle">📸</span> Progress Photos</div>
+          <label class="cute-btn secondary" style="width: auto; padding: 6px 12px; font-size: 0.8rem; cursor: pointer;">
+            + Upload Photo
+            <input type="file" accept="image/*" style="display:none" onchange="uploadProgressPhoto(event)">
+          </label>
+        </div>
+
+        <div class="polaroid-grid" id="polaroid-container">
+          <!-- Dynamic Polaroids -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. WORKOUT VIDEOS PAGE -->
+    <div id="page-workouts" class="page">
+      <div class="cute-card pink-tint">
+        <div class="flex-between" style="margin-bottom: 10px;">
+          <div class="section-title" style="margin:0;"><span class="sparkle">🎀</span> Workout Video Vault</div>
+          <button class="cute-btn secondary" style="width: auto; padding: 6px 12px; font-size: 0.8rem;" onclick="openModal('video-modal')">+ Add Video</button>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Save your favorite YouTube fitness routines directly in your app!</p>
+
+        <div id="video-list">
+          <!-- Dynamic YouTube Videos -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. NOTEPAD PAGE -->
+    <div id="page-notes" class="page">
+      <div class="cute-card">
+        <div class="section-title"><span class="sparkle">📜</span> Sweet Thoughts & Diary</div>
+        <textarea id="notepad-input" class="notepad-textarea" placeholder="write down your goals, thoughts, or workout plans here... 𝜗𝜚" oninput="saveNote()"></textarea>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="bottom-nav">
+      <button class="nav-btn active" onclick="switchPage('profile', this)">
+        <span class="icon">𝜗𝜚</span>
+        <span>Profile</span>
+      </button>
+      <button class="nav-btn" onclick="switchPage('calories', this)">
+        <span class="icon">🌸</span>
+        <span>Calories</span>
+      </button>
+      <button class="nav-btn" onclick="switchPage('habits', this)">
+        <span class="icon">✦</span>
+        <span>Habits</span>
+      </button>
+      <button class="nav-btn" onclick="switchPage('graphs', this)">
+        <span class="icon">🩰</span>
+        <span>Graphs</span>
+      </button>
+      <button class="nav-btn" onclick="switchPage('workouts', this)">
+        <span class="icon">🎀</span>
+        <span>Workouts</span>
+      </button>
+      <button class="nav-btn" onclick="switchPage('notes', this)">
+        <span class="icon">📜</span>
+        <span>Notes</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- MODALS -->
+  <!-- 1. Add Habit Modal -->
+  <div id="habit-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Add New Habit ✦</span>
+        <button class="close-btn" onclick="closeModal('habit-modal')">✕</button>
+      </div>
+      <input type="text" id="new-habit-input" class="cute-input" placeholder="Habit (e.g. Drink 2L Water, Pilates)..." />
+      <button class="cute-btn" onclick="addNewHabit()">Create Habit</button>
+    </div>
+  </div>
+
+  <!-- 2. Add Video Modal -->
+  <div id="video-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Add Workout Video 🎀</span>
+        <button class="close-btn" onclick="closeModal('video-modal')">✕</button>
+      </div>
+      <input type="text" id="video-title-input" class="cute-input" placeholder="Title (e.g. 15 Min Pilates Abs)..." />
+      <input type="text" id="video-url-input" class="cute-input" placeholder="YouTube Link (e.g. https://youtu.be/...)" />
+      <button class="cute-btn" onclick="addYouTubeVideo()">Save Video</button>
+    </div>
+  </div>
+
+  <!-- 3. Add Custom Graph Category Modal -->
+  <div id="graph-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Add Custom Graph 🩰</span>
+        <button class="close-btn" onclick="closeModal('graph-modal')">✕</button>
+      </div>
+      <input type="text" id="custom-graph-title" class="cute-input" placeholder="Label (e.g. Hip Measurement)..." />
+      <button class="cute-btn" onclick="addCustomGraphCategory()">Add Graph Label</button>
+    </div>
+  </div>
+
+  <script>
+    // App State Management via LocalStorage
+    let state = {
+      profile: { name: 'Angel 𝜗𝜚', bio: 'blooming into my best self 🌸', calorieGoal: 1800, streak: 0, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' },
+      calories: [],
+      habits: [
+        { id: 1, title: 'Drink 2L Matcha/Water 🍵', completed: false },
+        { id: 2, title: '30 Min Pilates Routine 🩰', completed: false },
+        { id: 3, title: 'Skincare Routine ✨', completed: false }
+      ],
+      graphs: {
+        weight: [62, 61.5, 61.0, 60.4],
+        bmi: [21.5, 21.3, 21.1, 20.9],
+        waist: [26, 25.8, 25.5],
+        glutes: [36, 36.2, 36.5],
+        chest: [34, 34],
+        arm: [9.5, 9.4],
+        thigh: [20, 19.8],
+        calf: [13, 13]
+      },
+      photos: [
+        { url: 'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=400&q=80', caption: 'week 1 ✨' }
+      ],
+      videos: [
+        { id: '2pLT-olgUJs', title: '15 Min Full Body Pilates Workout' }
+      ],
+      note: ''
+    };
+
+    let chartInstance = null;
+
+    // Load Data on Startup
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('bella_rose_state');
+      if (saved) {
+        state = JSON.parse(saved);
+      } else {
+        document.getElementById('onboarding-screen').style.display = 'flex';
+      }
+
+      updateUI();
+      initChart();
+    });
+
+    function saveState() {
+      localStorage.setItem('bella_rose_state', JSON.stringify(state));
+      updateUI();
+    }
+
+    // Onboarding setup
+    function completeSetup() {
+      const name = document.getElementById('setup-name').value.trim();
+      const bio = document.getElementById('setup-bio').value.trim();
+      const cals = parseInt(document.getElementById('setup-calories').value);
+
+      if (name) state.profile.name = name;
+      if (bio) state.profile.bio = bio;
+      if (cals) state.profile.calorieGoal = cals;
+
+      document.getElementById('onboarding-screen').style.display = 'none';
+      saveState();
+    }
+
+    // Tab Switching Logic
+    function switchPage(pageId, btn) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      document.getElementById(`page-${pageId}`).classList.add('active');
+      btn.classList.add('active');
+
+      if (pageId === 'graphs') {
+        setTimeout(renderActiveChart, 100);
+      }
+    }
+
+    // UI Render Function
+    function updateUI() {
+      // Profile Header
+      document.getElementById('display-name').innerText = state.profile.name;
+      document.getElementById('display-bio').innerText = `“${state.profile.bio}”`;
+      document.getElementById('profile-img').src = state.profile.avatar;
+      document.getElementById('streak-count').innerText = state.profile.streak;
+
+      // Calories Calculations
+      const totalCals = state.calories.reduce((sum, item) => sum + item.cals, 0);
+      const remaining = Math.max(0, state.profile.calorieGoal - totalCals);
+      const percent = Math.min(100, (totalCals / state.profile.calorieGoal) * 100);
+
+      document.getElementById('cal-eaten').innerText = totalCals;
+      document.getElementById('cal-remaining').innerText = remaining;
+      document.getElementById('quick-cals').innerText = totalCals;
+      document.getElementById('cal-progress-bar').style.width = `${percent}%`;
+
+      // Food List
+      const foodContainer = document.getElementById('food-list');
+      foodContainer.innerHTML = state.calories.length ? '' : '<div style="font-size:0.8rem; color:#aaa; text-align:center;">No meals logged today yet... 🍓</div>';
+      state.calories.forEach((item, index) => {
+        foodContainer.innerHTML += `
+          <div class="food-item">
+            <span>${item.name}</span>
+            <div>
+              <span class="cals">+${item.cals} cal</span>
+              <span style="color:#f472b6; margin-left:8px; cursor:pointer;" onclick="deleteFood(${index})">✕</span>
+            </div>
+          </div>
+        `;
+      });
+
+      // Habits List
+      const habitsContainer = document.getElementById('habits-container');
+      const completedCount = state.habits.filter(h => h.completed).length;
+      document.getElementById('quick-habits').innerText = `${completedCount}/${state.habits.length}`;
+
+      habitsContainer.innerHTML = '';
+      state.habits.forEach(h => {
+        habitsContainer.innerHTML += `
+          <div class="habit-item ${h.completed ? 'completed' : ''}">
+            <div class="habit-left">
+              <div class="habit-checkbox" onclick="toggleHabit(${h.id})">
+                ${h.completed ? '✓' : ''}
+              </div>
+              <span class="habit-text">${h.title}</span>
+            </div>
+            <span style="color:#aaa; cursor:pointer; font-size:0.8rem;" onclick="deleteHabit(${h.id})">✕</span>
+          </div>
+        `;
+      });
+
+      // Progress Photos
+      const polaroidContainer = document.getElementById('polaroid-container');
+      polaroidContainer.innerHTML = '';
+      state.photos.forEach(photo => {
+        polaroidContainer.innerHTML += `
+          <div class="polaroid-card">
+            <img src="${photo.url}" class="polaroid-img" alt="Progress">
+            <div class="polaroid-caption">${photo.caption}</div>
+          </div>
+        `;
+      });
+
+      // YouTube Videos
+      const videoContainer = document.getElementById('video-list');
+      videoContainer.innerHTML = '';
+      state.videos.forEach(v => {
+        videoContainer.innerHTML += `
+          <div class="video-card">
+            <div class="video-iframe-container">
+              <iframe src="https://www.youtube.com/embed/${v.id}" allowfullscreen></iframe>
+            </div>
+            <div class="video-info">
+              <span>${v.title}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      // Notepad
+      document.getElementById('notepad-input').value = state.note || '';
+    }
+
+    // Profile Avatar Upload
+    function uploadAvatar(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          state.profile.avatar = e.target.result;
+          saveState();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Calorie Functions
+    function addFoodItem() {
+      const name = document.getElementById('food-name').value.trim();
+      const cals = parseInt(document.getElementById('food-cals').value);
+
+      if (name && !isNaN(cals)) {
+        state.calories.push({ name, cals });
+        document.getElementById('food-name').value = '';
+        document.getElementById('food-cals').value = '';
+        saveState();
+      }
+    }
+
+    function deleteFood(index) {
+      state.calories.splice(index, 1);
+      saveState();
+    }
+
+    // Habit Functions & Streak Logic
+    function toggleHabit(id) {
+      const habit = state.habits.find(h => h.id === id);
+      if (habit) {
+        habit.completed = !habit.completed;
+
+        // Check if all habits completed for +1 Streak!
+        const allDone = state.habits.every(h => h.completed);
+        if (allDone && state.habits.length > 0) {
+          state.profile.streak += 1;
+          confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+        saveState();
+      }
+    }
+
+    function addNewHabit() {
+      const input = document.getElementById('new-habit-input');
+      const title = input.value.trim();
+      if (title) {
+        state.habits.push({ id: Date.now(), title, completed: false });
+        input.value = '';
+        closeModal('habit-modal');
+        saveState();
+      }
+    }
+
+    function deleteHabit(id) {
+      state.habits = state.habits.filter(h => h.id !== id);
+      saveState();
+    }
+
+    // Chart.js Graph Integration
+    function initChart() {
+      const ctx = document.getElementById('bodyChart').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Entry 1', 'Entry 2', 'Entry 3', 'Entry 4'],
+          datasets: [{
+            label: 'Measurement Progress',
+            data: [],
+            borderColor: '#f472b6',
+            backgroundColor: 'rgba(244, 114, 182, 0.15)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#e25885'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { grid: { color: '#fbcfe8' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+      renderActiveChart();
+    }
+
+    function renderActiveChart() {
+      const category = document.getElementById('chart-selector').value;
+      const dataPoints = state.graphs[category] || [];
+      
+      chartInstance.data.labels = dataPoints.map((_, i) => `Log ${i + 1}`);
+      chartInstance.data.datasets[0].data = dataPoints;
+      chartInstance.update();
+    }
+
+    function addGraphDataPoint() {
+      const category = document.getElementById('chart-selector').value;
+      const val = parseFloat(document.getElementById('graph-value-input').value);
+
+      if (!isNaN(val)) {
+        if (!state.graphs[category]) state.graphs[category] = [];
+        state.graphs[category].push(val);
+        document.getElementById('graph-value-input').value = '';
+        saveState();
+        renderActiveChart();
+      }
+    }
+
+    function addCustomGraphCategory() {
+      const name = document.getElementById('custom-graph-title').value.trim();
+      if (name) {
+        const key = name.toLowerCase().replace(/\s+/g, '_');
+        state.graphs[key] = [];
+        
+        const selector = document.getElementById('chart-selector');
+        const option = document.createElement('option');
+        option.value = key;
+        option.innerText = name;
+        selector.appendChild(option);
+        
+        selector.value = key;
+        closeModal('graph-modal');
+        saveState();
+        renderActiveChart();
+      }
+    }
+
+    // Photo Upload Progress
+    function uploadProgressPhoto(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          state.photos.push({
+            url: e.target.result,
+            caption: `Entry #${state.photos.length + 1} 𝜗𝜚`
+          });
+          saveState();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // YouTube Video Adding
+    function addYouTubeVideo() {
+      const title = document.getElementById('video-title-input').value.trim();
+      const url = document.getElementById('video-url-input').value.trim();
+
+      // Extract YouTube Video ID
+      let videoId = '';
+      if (url.includes('v=')) {
+        videoId = url.split('v=')[1].split('&')[0];
+      } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
+      }
+
+      if (title && videoId) {
+        state.videos.push({ id: videoId, title });
+        document.getElementById('video-title-input').value = '';
+        document.getElementById('video-url-input').value = '';
+        closeModal('video-modal');
+        saveState();
+      }
+    }
+
+    // Note Function
+    function saveNote() {
+      state.note = document.getElementById('notepad-input').value;
+      localStorage.setItem('bella_rose_state', JSON.stringify(state));
+    }
+
+    // Modal Helpers
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+  </script>
+</body>
+</html>
